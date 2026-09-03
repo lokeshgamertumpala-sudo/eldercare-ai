@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
   const t = TRANSLATIONS[language];
 
   return (
-    <header className="w-full max-w-xl mx-auto pt-3 pb-2 px-4 flex items-center justify-between z-20">
+    <header className="w-full max-w-md mx-auto pt-3 pb-2 px-4 flex items-center justify-between z-20">
       {/* Brand Title */}
       <div className="flex items-center gap-2">
         <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-sky-500/30 to-indigo-500/30 border border-sky-400/30 flex items-center justify-center shadow-lg shadow-sky-500/10">

@@ -380,7 +380,7 @@ export default function Home() {
 
   return (
     <main
-      className={`min-h-screen flex flex-col justify-between pb-20 relative select-none ${
+      className={`min-h-screen flex flex-col justify-between pb-36 sm:pb-28 pb-[max(140px,env(safe-area-inset-bottom))] relative select-none ${
         preferences.highContrast ? 'high-contrast' : ''
       } ${
         preferences.fontSize === 'large'
