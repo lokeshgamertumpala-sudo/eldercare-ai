@@ -1,111 +1,1208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="te" class="h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ElderCare AI — Launcher</title>
-  <meta http-equiv="refresh" content="0; url=http://localhost:3005">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ElderCare AI — One button. One voice. One calm answer.</title>
+  <meta name="description" content="An Apple-inspired, multimodal, accessible AI health and medicine companion for elderly adults.">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS via CDN for instant, terminal-independent execution -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti for celebratory reminder confirmations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans Telugu"', '"Noto Sans Devanagari"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            elder: {
+              bg: '#090d16',
+              surface: 'rgba(255, 255, 255, 0.08)',
+              border: 'rgba(255, 255, 255, 0.15)',
+              accent: '#38bdf8',
+            }
+          },
+          boxShadow: {
+            'liquid': '0 12px 36px 0 rgba(0, 0, 0, 0.42), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2)',
+            'liquid-lg': '0 20px 50px 0 rgba(0, 0, 0, 0.6), inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.35)',
+            'orb-idle': '0 0 50px 15px rgba(56, 189, 248, 0.25)',
+            'orb-listening': '0 0 70px 25px rgba(99, 102, 241, 0.4)',
+            'orb-thinking': '0 0 70px 25px rgba(236, 72, 153, 0.4)',
+            'orb-speaking': '0 0 80px 30px rgba(16, 185, 129, 0.45)',
+            'orb-urgent': '0 0 80px 30px rgba(239, 68, 68, 0.45)',
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    body {
-      background: #090d16;
-      color: #f8fafc;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
+    :root {
+      --bg-main: #090d16;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
     }
-    .card {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 24px;
-      padding: 36px 28px;
-      max-width: 480px;
-      width: 100%;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    }
-    .orb {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #38bdf8, #6366f1, #ec4899);
-      margin: 0 auto 20px;
-      box-shadow: 0 0 40px rgba(56, 189, 248, 0.4);
-      animation: pulse 2s infinite alternate;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); filter: brightness(1); }
-      100% { transform: scale(1.08); filter: brightness(1.2); }
-    }
-    h1 {
-      font-size: 26px;
-      margin: 0 0 8px;
-      letter-spacing: -0.5px;
-    }
-    p {
-      color: #94a3b8;
-      font-size: 15px;
-      line-height: 1.5;
-      margin: 0 0 24px;
-    }
-    .btn {
-      display: inline-block;
-      width: 100%;
-      box-sizing: border-box;
-      background: linear-gradient(135deg, #0284c7, #4f46e5);
-      color: #ffffff;
-      padding: 16px 24px;
-      border-radius: 16px;
-      text-decoration: none;
+    html {
       font-size: 18px;
-      font-weight: bold;
-      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.35);
-      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
     }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(2, 132, 199, 0.5);
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      touch-action: manipulation;
     }
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 20px;
-      padding: 6px 14px;
-      border-radius: 9999px;
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #6ee7b7;
-      font-size: 13px;
-      font-weight: 600;
+    /* Liquid Glass styling */
+    .liquid-glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.42), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
     }
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #10b981;
-      animation: blink 1.2s infinite;
+    .liquid-glass-elevated {
+      background: rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(32px) saturate(200%);
+      -webkit-backdrop-filter: blur(32px) saturate(200%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.6), inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.35);
     }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+    .liquid-glass-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
+    .tactile-button {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    }
+    .tactile-button:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    /* Fluid Keyframes */
+    @keyframes fluid-pulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.35)); }
+      50% { transform: scale(1.06); filter: drop-shadow(0 0 55px rgba(99, 102, 241, 0.55)); }
+    }
+    @keyframes fluid-listening {
+      0%, 100% { transform: scale(1.02); filter: drop-shadow(0 0 50px rgba(99, 102, 241, 0.65)); }
+      50% { transform: scale(1.12); filter: drop-shadow(0 0 75px rgba(168, 85, 247, 0.75)); }
+    }
+    @keyframes fluid-thinking {
+      0% { transform: rotate(0deg) scale(1.03); filter: drop-shadow(0 0 50px rgba(236, 72, 153, 0.6)); }
+      50% { transform: rotate(180deg) scale(1.08); filter: drop-shadow(0 0 65px rgba(139, 92, 246, 0.7)); }
+      100% { transform: rotate(360deg) scale(1.03); filter: drop-shadow(0 0 50px rgba(236, 72, 153, 0.6)); }
+    }
+    @keyframes fluid-speaking {
+      0%, 100% { transform: scale(1.02); filter: drop-shadow(0 0 50px rgba(16, 185, 129, 0.6)); }
+      50% { transform: scale(1.14); filter: drop-shadow(0 0 80px rgba(52, 211, 153, 0.75)); }
+    }
+    @keyframes fluid-urgent {
+      0%, 100% { transform: scale(1.05); filter: drop-shadow(0 0 60px rgba(239, 68, 68, 0.75)); }
+      50% { transform: scale(1.16); filter: drop-shadow(0 0 95px rgba(248, 113, 113, 0.9)); }
+    }
+    .orb-idle { animation: fluid-pulse 4s ease-in-out infinite; }
+    .orb-listening { animation: fluid-listening 1.8s ease-in-out infinite; }
+    .orb-thinking { animation: fluid-thinking 6s linear infinite; }
+    .orb-speaking { animation: fluid-speaking 1.4s ease-in-out infinite; }
+    .orb-urgent { animation: fluid-urgent 1.2s ease-in-out infinite; }
+
+    /* High contrast mode */
+    .high-contrast {
+      --bg-main: #000000 !important;
+      --text-primary: #ffffff !important;
+    }
+    .high-contrast .liquid-glass,
+    .high-contrast .liquid-glass-card,
+    .high-contrast .liquid-glass-elevated {
+      background: #000000 !important;
+      border: 2px solid #ffffff !important;
+      box-shadow: none !important;
+    }
+    .text-scale-large { font-size: 21px !important; }
+    .text-scale-extra-large { font-size: 24px !important; }
   </style>
 </head>
-<body>
-  <div class="card">
-    <div class="orb"></div>
-    <h1>ELDERCARE AI</h1>
-    <p>Opening the application now at <strong>http://localhost:3000</strong>... If your browser does not open automatically, click the button below:</p>
-    <a href="http://localhost:3000" class="btn">Launch ElderCare AI</a>
-    <div class="status">
-      <span class="dot"></span> Next.js Server is Active on Port 3000
+<body class="min-h-screen flex flex-col justify-between pb-36 relative select-none">
+  <!-- Background Glows -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute top-1/4 -left-32 w-80 h-80 bg-sky-600/15 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/3 -right-32 w-80 h-80 bg-indigo-600/15 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
+  </div>
+
+  <div class="relative z-10 flex flex-col flex-1">
+    <!-- Header -->
+    <header class="w-full max-w-md mx-auto pt-3 pb-2 px-4 flex items-center justify-between z-20">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-sky-500/30 to-indigo-500/30 border border-sky-400/30 flex items-center justify-center shadow-lg">
+          <svg class="w-5 h-5 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 id="appTitleText" class="text-xl font-bold tracking-tight text-white leading-none">ఎల్డర్‌కేర్ AI</h1>
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-[11px] font-medium tracking-wide text-emerald-300 uppercase">Gemini 3.8 Flash Engine</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Language switch & Settings -->
+      <div class="flex items-center gap-1.5">
+        <div class="flex items-center p-1 rounded-full liquid-glass border border-white/10">
+          <button onclick="setLang('en')" id="langBtnEn" class="px-2.5 py-1 rounded-full text-xs font-semibold text-slate-300">EN</button>
+          <button onclick="setLang('te')" id="langBtnTe" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-pink-600 text-white shadow-md">తెలుగు</button>
+          <button onclick="setLang('hi')" id="langBtnHi" class="px-2.5 py-1 rounded-full text-xs font-semibold text-slate-300">हिन्दी</button>
+        </div>
+        <button onclick="openSettings()" class="w-10 h-10 rounded-full liquid-glass border border-white/15 flex items-center justify-center text-slate-200 hover:text-white transition-all tactile-button">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Active Reminder Banner Alert -->
+    <div id="reminderAlertBanner" class="hidden w-full max-w-sm mx-auto px-4 my-2">
+      <div class="liquid-glass-elevated rounded-2xl p-4 border-2 border-emerald-400/50 shadow-liquid relative overflow-hidden bg-gradient-to-r from-emerald-950/40 via-slate-900/60 to-emerald-950/40">
+        <button onclick="dismissAlert()" class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full liquid-glass flex items-center justify-center text-slate-300">✕</button>
+        <div class="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-1">
+          <span>🔔 Medicine Alert (మందుల సమయం)</span>
+        </div>
+        <h2 id="alertTitle" class="text-xl sm:text-2xl font-bold text-white tracking-tight">మీ మందు తీసుకునే సమయం అయింది.</h2>
+        <p id="alertSubtitle" class="text-sm text-slate-200 mt-1 font-medium">Metformin 500mg • 1 tablet with water (టిఫిన్ తర్వాత ఒక మాత్ర)</p>
+        <div class="mt-3 flex gap-2">
+          <button onclick="markAlertTaken()" class="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm flex items-center justify-center gap-1.5 shadow-md tactile-button">
+            <span>Taken (తీసుకున్నాను)</span>
+          </button>
+          <button onclick="dismissAlert()" class="px-4 py-2.5 rounded-xl liquid-glass text-slate-300 font-bold text-sm tactile-button">Snooze</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Orb -->
+    <div class="flex flex-col items-center justify-center my-3 select-none">
+      <div onclick="toggleActivation()" id="orbContainer" class="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center cursor-pointer group focus:outline-none">
+        <div id="orbDiffusion" class="absolute inset-0 rounded-full bg-gradient-to-tr from-sky-400 via-cyan-500 to-indigo-500 opacity-40 blur-3xl transition-all duration-700 pointer-events-none"></div>
+        <div id="orbRing" class="relative w-40 h-40 sm:w-44 sm:h-44 rounded-full p-[3px] bg-gradient-to-b from-white/40 via-white/10 to-white/5 backdrop-blur-2xl shadow-liquid-lg orb-idle transition-all duration-500">
+          <div class="w-full h-full rounded-full bg-gradient-to-br from-slate-900/80 via-slate-800/60 to-slate-950/90 flex items-center justify-center overflow-hidden border border-white/20 relative">
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-32 h-20 bg-gradient-to-b from-white/30 to-transparent rounded-full blur-sm pointer-events-none"></div>
+            <div id="orbCore" class="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-sky-400 via-cyan-500 to-indigo-500 opacity-85 blur-md transform transition-all duration-700"></div>
+            <!-- Acoustic Waveform -->
+            <div id="orbWaveform" class="hidden absolute inset-0 flex items-center justify-center gap-1.5 z-10">
+              <span class="w-1.5 h-6 bg-white/90 rounded-full animate-bounce"></span>
+              <span class="w-1.5 h-11 bg-white/95 rounded-full animate-bounce [animation-delay:150ms]"></span>
+              <span class="w-1.5 h-14 bg-white rounded-full animate-bounce [animation-delay:300ms]"></span>
+              <span class="w-1.5 h-10 bg-white/95 rounded-full animate-bounce [animation-delay:450ms]"></span>
+              <span class="w-1.5 h-5 bg-white/90 rounded-full animate-bounce [animation-delay:600ms]"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Pill -->
+      <div class="mt-3 flex items-center gap-2 px-4 py-1.5 rounded-full liquid-glass border border-white/15 shadow-sm">
+        <span id="statusDot" class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+        <span id="statusText" class="text-base sm:text-lg font-semibold tracking-wide text-slate-100">మీరు మాట్లాడవచ్చు</span>
+      </div>
+    </div>
+
+    <!-- Live Speech Recognition Transcript under Orb -->
+    <div id="speechTranscriptBox" class="hidden w-full max-w-sm mx-auto px-4 -mt-1 mb-2">
+      <div class="p-3 rounded-2xl liquid-glass border border-sky-400/40 text-center">
+        <span class="text-[11px] font-bold text-sky-400 uppercase tracking-wider block mb-0.5">Hearing You (వింటున్నాను)</span>
+        <p id="speechTranscriptText" class="text-base sm:text-lg font-bold text-white italic">&ldquo;&rdquo;</p>
+      </div>
+    </div>
+
+    <!-- Huge Tactile Activation Button -->
+    <div class="w-full max-w-sm mx-auto px-4 my-2 text-center">
+      <button onclick="toggleActivation()" id="mainActivationBtn" class="w-full h-16 sm:h-20 rounded-2xl font-bold text-xl sm:text-2xl tracking-wide flex items-center justify-center gap-3.5 transition-all duration-300 tactile-button border liquid-glass-elevated text-white hover:bg-white/15 border-white/25 shadow-liquid-lg">
+        <div id="actBtnIconContainer" class="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-tr from-sky-500 to-indigo-500 shadow-md">
+          <svg id="micIcon" class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" x2="12" y1="19" y2="22"/>
+          </svg>
+        </div>
+        <span id="actBtnText" class="truncate">సహాయం ప్రారంభించండి</span>
+      </button>
+      <p id="prototypeNote" class="text-[12px] text-slate-400/80 mt-1.5 font-medium tracking-wide">ప్రోటోటైప్ ప్రారంభ బటన్ (డబుల్ ప్రెస్ కాన్సెప్ట్)</p>
+    </div>
+
+    <!-- Camera & Emergency Action Buttons -->
+    <div class="w-full max-w-sm mx-auto px-4 grid grid-cols-2 gap-3 my-1">
+      <button onclick="openCamera()" class="h-16 rounded-2xl liquid-glass-card hover:bg-white/15 border border-white/20 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2.5 tactile-button shadow-liquid">
+        <div class="w-9 h-9 rounded-full bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-sky-400">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+            <circle cx="12" cy="13" r="3"/>
+          </svg>
+        </div>
+        <span id="cameraBtnLabel">కెమెరా</span>
+      </button>
+
+      <button onclick="openEmergency()" class="h-16 rounded-2xl bg-gradient-to-r from-rose-950/60 to-red-900/60 hover:from-rose-900/70 hover:to-red-800/70 border-2 border-rose-500/40 text-rose-100 font-bold text-base sm:text-lg flex items-center justify-center gap-2.5 tactile-button shadow-liquid">
+        <div class="w-9 h-9 rounded-full bg-rose-500/30 border border-rose-400/40 flex items-center justify-center text-rose-300 animate-pulse">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <span id="emergencyBtnLabel">అత్యవసరం</span>
+      </button>
+    </div>
+
+    <!-- Next Medicine Card -->
+    <div class="w-full max-w-sm mx-auto px-4 my-2">
+      <div class="liquid-glass-card rounded-2xl p-4 border border-white/20 shadow-liquid relative overflow-hidden">
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-300 text-xs font-semibold">
+            <span>💊 <span id="nextMedLabel">తదుపరి మందు</span></span>
+          </div>
+          <div class="flex items-center gap-1.5 text-slate-300 text-sm font-bold bg-white/5 px-2.5 py-0.5 rounded-lg border border-white/10">
+            <span>⏰ 08:00 AM</span>
+          </div>
+        </div>
+        <div>
+          <h2 id="medName" class="text-xl sm:text-2xl font-bold text-white tracking-tight">మెట్ఫార్మిన్ 500mg (Metformin)</h2>
+          <p id="medDosage" class="text-sm font-medium text-slate-300 mt-0.5">1 tablet (1 మాత్ర) • Daily (ప్రతిరోజూ)</p>
+        </div>
+        <p id="medInstruction" class="text-sm sm:text-base text-slate-200 mt-2 bg-white/5 p-2.5 rounded-xl border border-white/10 leading-snug">
+          ఉదయం టిఫిన్ తిన్న తర్వాత మంచినీళ్లతో వేసుకోవాలి. షుగర్ నియంత్రణకు సహాయపడుతుంది.
+        </p>
+        <div class="mt-3">
+          <button onclick="markMedTaken(this)" class="w-full py-2.5 rounded-xl liquid-glass text-white hover:bg-white/15 border border-white/25 font-semibold text-sm flex items-center justify-center gap-2 transition-all tactile-button">
+            <span>✓ Mark as Taken (తీసుకున్నాను)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text Input Bar -->
+    <div class="w-full max-w-sm mx-auto px-4 my-1">
+      <div class="p-2 rounded-2xl liquid-glass border border-white/20 flex items-center gap-2">
+        <input type="text" id="typeInput" placeholder="మీ మందుల గురించి అడగండి..." class="flex-1 bg-transparent px-3 py-2 text-white placeholder-slate-400 text-sm font-medium focus:outline-none" onkeydown="if(event.key==='Enter') sendTypedMsg()">
+        <button onclick="sendTypedMsg()" class="w-10 h-10 rounded-xl bg-sky-500 hover:bg-sky-400 text-white flex items-center justify-center tactile-button">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Conversation Feed & Empty State -->
+    <div id="chatFeed" class="w-full max-w-sm mx-auto px-4 space-y-3.5 my-3">
+      <!-- Empty State Card -->
+      <div id="emptyStateCard" class="liquid-glass-card rounded-3xl p-5 border border-white/15 shadow-liquid text-center">
+        <div class="w-12 h-12 rounded-full bg-sky-500/20 border border-sky-400/30 flex items-center justify-center mx-auto mb-3 text-sky-400">✨</div>
+        <h2 id="emptyTitle" class="text-xl sm:text-2xl font-bold text-white tracking-tight">నమస్కారం, నేను మీకు ఎలా సహాయపడగలను?</h2>
+        <p id="emptySubtitle" class="text-sm text-slate-300 mt-1 leading-snug">క్రింద ఉన్న పెద్ద బటన్ నొక్కి మాట్లాడండి లేదా ప్రశ్న ఎంచుకోండి.</p>
+        <div class="mt-4 flex flex-col gap-2 text-left">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-1">Sample questions (ఉదాహరణ ప్రశ్నలు)</span>
+          <button onclick="askPreset('నా మందు ఎప్పుడు తీసుకోవాలి?')" class="w-full text-left p-2.5 rounded-xl liquid-glass text-slate-200 hover:text-white hover:bg-white/15 border border-white/10 text-sm font-medium transition-all flex items-center justify-between tactile-button">
+            <span>నా మందు ఎప్పుడు తీసుకోవాలి?</span> ➔
+          </button>
+          <button onclick="askPreset('టిఫిన్ తర్వాత ఏ మందు వేసుకోవాలి?')" class="w-full text-left p-2.5 rounded-xl liquid-glass text-slate-200 hover:text-white hover:bg-white/15 border border-white/10 text-sm font-medium transition-all flex items-center justify-between tactile-button">
+            <span>టిఫిన్ తర్వాత ఏ మందు వేసుకోవాలి?</span> ➔
+          </button>
+          <button onclick="askPreset('రోజూ ఉదయం 8 గంటలకు గుర్తు చేయండి')" class="w-full text-left p-2.5 rounded-xl liquid-glass text-slate-200 hover:text-white hover:bg-white/15 border border-white/10 text-sm font-medium transition-all flex items-center justify-between tactile-button">
+            <span>రోజూ ఉదయం 8 గంటలకు గుర్తు చేయండి</span> ➔
+          </button>
+          <button onclick="askPreset('నాకు కొద్దిగా తలతిరుగుతోంది, ఏం చేయాలి?')" class="w-full text-left p-2.5 rounded-xl liquid-glass text-slate-200 hover:text-white hover:bg-white/15 border border-white/10 text-sm font-medium transition-all flex items-center justify-between tactile-button">
+            <span>నాకు కొద్దిగా తలతిరుగుతోంది, ఏం చేయాలి?</span> ➔
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Medical Disclaimer -->
+    <div class="w-full max-w-sm mx-auto px-4 mt-4 text-center">
+      <p id="disclaimerText" class="text-[11px] text-slate-500 leading-relaxed font-medium">
+        ఈ AI ప్రోటోటైప్ కేవలం ప్రదర్శన కొరకు మాత్రమే. ఇది డాక్టర్ లేదా ఫార్మసిస్ట్ సలహాకు ప్రత్యామ్నాయం కాదు.
+      </p>
     </div>
   </div>
+
+  <!-- Camera Inspection Modal -->
+  <div id="cameraModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex flex-col items-center justify-between p-4">
+    <div class="w-full max-w-lg flex items-center justify-between py-2 border-b border-white/10">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">📸</span>
+        <h2 class="text-lg font-bold text-white">Medicine Camera Inspection</h2>
+      </div>
+      <button onclick="closeCamera()" class="w-10 h-10 rounded-full liquid-glass text-slate-300">✕</button>
+    </div>
+
+    <div class="w-full max-w-lg flex-1 flex flex-col items-center justify-center my-3 relative overflow-hidden rounded-3xl border border-white/20 liquid-glass shadow-liquid-lg">
+      <video id="cameraVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
+      <canvas id="cameraCanvas" class="hidden"></canvas>
+      <img id="cameraPreviewImg" class="hidden max-h-[52vh] w-auto rounded-2xl object-contain shadow-md" alt="Medicine preview">
+    </div>
+
+    <div class="w-full max-w-lg mb-3 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-left">
+      <p class="text-[12px] text-amber-200/90 leading-tight">
+        ⚠️ I can read visible package labels, but cannot identify unknown pills by sight alone. Please verify with your doctor or pharmacist.
+      </p>
+    </div>
+
+    <div class="w-full max-w-lg flex items-center justify-between gap-3 pb-2">
+      <button onclick="document.getElementById('fileUploadInput').click()" class="py-3 px-4 rounded-2xl liquid-glass text-slate-300 border border-white/15 text-sm font-semibold">
+        📁 Upload
+      </button>
+      <button onclick="captureCameraPhoto()" class="w-20 h-20 rounded-full bg-white p-1 shadow-liquid-lg flex items-center justify-center tactile-button">
+        <div class="w-full h-full rounded-full border-4 border-slate-900 bg-white"></div>
+      </button>
+      <button onclick="useSampleMetforminBox()" class="py-3 px-4 rounded-2xl liquid-glass text-slate-300 border border-white/15 text-sm font-semibold">
+        ✨ Demo Box
+      </button>
+    </div>
+    <input type="file" id="fileUploadInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
+  </div>
+
+  <!-- Emergency Modal -->
+  <div id="emergencyModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="w-full max-w-md liquid-glass-elevated rounded-3xl border-2 border-rose-500/40 p-5 shadow-2xl relative overflow-hidden">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-full bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400">🚨</div>
+          <div>
+            <h2 class="text-xl font-bold text-white">Emergency Help (అత్యవసరం)</h2>
+            <span class="text-[11px] font-bold text-rose-400 uppercase">Immediate Action</span>
+          </div>
+        </div>
+        <button onclick="closeEmergency()" class="w-10 h-10 rounded-full liquid-glass text-slate-300">✕</button>
+      </div>
+      <div class="my-3.5 p-3 rounded-2xl bg-rose-950/40 border border-rose-500/30 text-xs sm:text-sm text-rose-200">
+        తీవ్రమైన గుండె నొప్పి, శ్వాస ఆడకపోవడం లాంటి సమస్యలు ఉంటే వెంటనే 108 కి కాల్ చేయండి.
+      </div>
+      <div class="flex flex-col gap-2.5 my-2">
+        <div class="p-3.5 rounded-2xl liquid-glass border border-white/15 flex items-center justify-between">
+          <div>
+            <h4 class="text-base font-bold text-white">Rajesh (కుమారుడు / Son)</h4>
+            <p class="text-xs text-slate-300">+91 98765 43210</p>
+          </div>
+          <a href="tel:+919876543210" class="p-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-xs">📞 Call</a>
+        </div>
+        <div class="p-3.5 rounded-2xl liquid-glass border border-white/15 flex items-center justify-between">
+          <div>
+            <h4 class="text-base font-bold text-white">Dr. K. Sharma (Doctor)</h4>
+            <p class="text-xs text-slate-300">+91 98480 12345</p>
+          </div>
+          <a href="tel:+919848012345" class="p-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-xs">📞 Call</a>
+        </div>
+        <div class="p-3.5 rounded-2xl liquid-glass border border-white/15 flex items-center justify-between">
+          <div>
+            <h4 class="text-base font-bold text-white">Ambulance (అంబులెన్స్)</h4>
+            <p class="text-xs text-slate-300">Helpline: 108 / 112</p>
+          </div>
+          <a href="tel:108" class="p-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs">🚨 Call 108</a>
+        </div>
+      </div>
+      <p class="text-[11px] text-slate-400 text-center mt-3 pt-2 border-t border-white/10">
+        This prototype provides emergency contact dialing. In a life-threatening emergency, dial 112 or 108 immediately.
+      </p>
+    </div>
+  </div>
+
+  <!-- Pharmacy Call Bot Modal -->
+  <div id="pharmacyModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="w-full max-w-lg liquid-glass-elevated rounded-3xl border border-sky-400/30 p-5 shadow-2xl flex flex-col max-h-[85vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🏪</span>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-xl font-bold text-white">Pharmacy Call Bot</h2>
+              <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-extrabold uppercase border border-amber-500/30">DEMO MODE</span>
+            </div>
+            <p class="text-xs text-slate-300">Checking stock for Metformin 500mg</p>
+          </div>
+        </div>
+        <button onclick="closePharmacy()" class="w-10 h-10 rounded-full liquid-glass text-slate-300">✕</button>
+      </div>
+
+      <div class="my-3 p-3.5 rounded-2xl liquid-glass border border-white/15 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div id="pharmacyPing" class="w-3.5 h-3.5 rounded-full bg-emerald-400 animate-ping"></div>
+          <div>
+            <span class="text-xs font-semibold text-slate-400 uppercase block">Call Status</span>
+            <span id="pharmacyStatusTitle" class="text-sm sm:text-base font-bold text-white">Dialing Apollo Pharmacy...</span>
+          </div>
+        </div>
+        <span id="pharmacyStockBadge" class="hidden px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30">IN STOCK</span>
+      </div>
+
+      <div id="pharmacyTranscriptFeed" class="flex-1 overflow-y-auto my-2 space-y-2.5 pr-1"></div>
+
+      <div class="pt-3 border-t border-white/10 flex gap-2.5">
+        <button onclick="startPharmacyDemoCall()" class="flex-1 py-3 rounded-2xl liquid-glass text-slate-200 border border-white/20 font-bold text-sm tactile-button">Replay Call Demo</button>
+        <button onclick="closePharmacy()" class="flex-1 py-3 rounded-2xl bg-sky-500 text-white font-bold text-sm tactile-button">Done (పూర్తయింది)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings & Accessibility Drawer -->
+  <div id="settingsDrawer" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-xl flex justify-end">
+    <div class="w-full max-w-md bg-[#0c121e] border-l border-white/20 h-full p-5 flex flex-col justify-between overflow-y-auto">
+      <div>
+        <div class="flex items-center justify-between pb-4 border-b border-white/10">
+          <h2 class="text-xl font-bold text-white">Settings & Accessibility</h2>
+          <button onclick="closeSettings()" class="w-10 h-10 rounded-full liquid-glass text-slate-300">✕</button>
+        </div>
+        <div class="space-y-5 my-5">
+          <div>
+            <label class="text-sm font-bold text-slate-300 uppercase block mb-2">Primary Language</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="setLang('en')" class="py-3 rounded-xl font-bold text-sm border liquid-glass text-white">English</button>
+              <button onclick="setLang('te')" class="py-3 rounded-xl font-bold text-sm border bg-pink-600 text-white">తెలుగు</button>
+              <button onclick="setLang('hi')" class="py-3 rounded-xl font-bold text-sm border liquid-glass text-white">हिन्दी</button>
+            </div>
+          </div>
+          <div>
+            <label class="text-sm font-bold text-slate-300 uppercase block mb-2">Voice Speed</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="setVoiceRate(0.85)" class="py-3 rounded-xl font-bold text-sm border bg-emerald-600 text-white">Slow (Easier)</button>
+              <button onclick="setVoiceRate(1.0)" class="py-3 rounded-xl font-bold text-sm border liquid-glass text-white">Normal</button>
+            </div>
+          </div>
+          <div>
+            <label class="text-sm font-bold text-slate-300 uppercase block mb-2">Text Size</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="setTextScale('normal')" class="py-2.5 rounded-xl font-bold text-xs border liquid-glass text-white">Default</button>
+              <button onclick="setTextScale('large')" class="py-2.5 rounded-xl font-bold text-sm border liquid-glass text-white">Large</button>
+              <button onclick="setTextScale('extra-large')" class="py-2.5 rounded-xl font-bold text-base border liquid-glass text-white">XL</button>
+            </div>
+          </div>
+          <div class="p-3.5 rounded-2xl liquid-glass border border-white/15 flex items-center justify-between">
+            <span class="text-base font-bold text-white">High Contrast Mode</span>
+            <input type="checkbox" onchange="toggleHighContrast(this.checked)" class="w-6 h-6 rounded accent-sky-500">
+          </div>
+          <div class="p-3.5 rounded-2xl bg-sky-950/40 border border-sky-400/25">
+            <span class="text-xs font-bold text-sky-300 uppercase block mb-1">Optional Gemini API Key</span>
+            <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." class="w-full bg-black/50 border border-white/20 px-3 py-2 rounded-xl text-xs text-white" onchange="saveGeminiKey(this.value)">
+            <p class="text-[11px] text-slate-400 mt-1">Leave empty to use built-in offline intelligence engine.</p>
+          </div>
+        </div>
+      </div>
+      <div class="pt-4 border-t border-white/10 space-y-2.5">
+        <button onclick="resetAllDemoData()" class="w-full py-3.5 rounded-2xl liquid-glass text-rose-300 border border-rose-500/30 font-bold text-sm tactile-button">Reset All Demo Data</button>
+        <button onclick="closeSettings()" class="w-full py-3.5 rounded-2xl bg-sky-500 text-white font-bold text-base tactile-button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hackathon Judge Floating Demo Toolbar -->
+  <div class="fixed bottom-0 inset-x-0 z-40 flex flex-col items-center pointer-events-none pb-1">
+    <button onclick="toggleDemoDock()" class="pointer-events-auto px-4 py-1.5 rounded-full liquid-glass-elevated border border-sky-400/40 text-xs font-bold text-sky-200 flex items-center gap-1.5 shadow-2xl mb-1 tactile-button">
+      <span>🛠️ Judge Demo Bar (డెమో బార్)</span>
+    </button>
+    <div id="demoDock" class="pointer-events-auto w-full max-w-lg mx-auto px-3 pb-2">
+      <div class="liquid-glass-elevated rounded-2xl p-3 border border-sky-400/30 shadow-2xl backdrop-blur-3xl">
+        <div class="flex items-center justify-between pb-1.5 mb-2 border-b border-white/10">
+          <span class="text-[11px] font-black uppercase text-sky-300">ICO Hackathon Testing Controls</span>
+          <span class="text-[10px] font-mono text-emerald-400">Gemini 3.8 Flash</span>
+        </div>
+        <div class="grid grid-cols-4 gap-2">
+          <button onclick="triggerDemoReminder()" class="p-2.5 rounded-xl liquid-glass border border-sky-400/30 text-sky-100 text-xs font-bold flex flex-col items-center gap-1 tactile-button">
+            <span>🔔</span> <span class="text-[11px]">Reminder</span>
+          </button>
+          <button onclick="triggerDemoUrgent()" class="p-2.5 rounded-xl liquid-glass border border-rose-500/40 text-rose-200 text-xs font-bold flex flex-col items-center gap-1 tactile-button">
+            <span>⚠️</span> <span class="text-[11px]">Urgent</span>
+          </button>
+          <button onclick="openCamera(); useSampleMetforminBox();" class="p-2.5 rounded-xl liquid-glass border border-indigo-400/30 text-indigo-100 text-xs font-bold flex flex-col items-center gap-1 tactile-button">
+            <span>📸</span> <span class="text-[11px]">Camera</span>
+          </button>
+          <button onclick="openPharmacy()" class="p-2.5 rounded-xl liquid-glass border border-emerald-400/30 text-emerald-100 text-xs font-bold flex flex-col items-center gap-1 tactile-button">
+            <span>🏪</span> <span class="text-[11px]">Pharmacy</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global State
+    let currentLang = 'te';
+    let currentState = 'idle'; // idle | listening | transcribing | thinking | speaking
+    let voiceRate = 0.85;
+    let recognition = null;
+    let cameraStream = null;
+
+    const DICT = {
+      en: {
+        appTitle: 'ELDERCARE AI',
+        ready: 'Ready when you are',
+        listening: 'Listening...',
+        thinking: 'Thinking...',
+        speaking: 'Speaking...',
+        startAssistant: 'Start Assistant',
+        stopSpeaking: 'Stop Speaking',
+        prototypeNote: 'Prototype activation (future double-press)',
+        camera: 'Camera',
+        emergency: 'Emergency',
+        nextMedicine: 'Next Medicine',
+        emptyTitle: 'How can I help you today?',
+        emptySubtitle: 'Tap the big button below and speak in your language.',
+        disclaimer: 'This prototype provides AI-assisted information for demonstration purposes and is not a substitute for a doctor, pharmacist, prescription, or emergency service.',
+        alertSpoken: "It's time for your medicine.",
+      },
+      te: {
+        appTitle: 'ఎల్డర్‌కేర్ AI',
+        ready: 'మీరు మాట్లాడవచ్చు',
+        listening: 'వింటున్నాను...',
+        thinking: 'ఆలోచిస్తున్నాను...',
+        speaking: 'మాట్లాడుతున్నాను...',
+        startAssistant: 'సహాయం ప్రారంభించండి',
+        stopSpeaking: 'ఆపండి',
+        prototypeNote: 'ప్రోటోటైప్ ప్రారంభ బటన్ (డబుల్ ప్రెస్ కాన్సెప్ట్)',
+        camera: 'కెమెరా',
+        emergency: 'అత్యవసరం',
+        nextMedicine: 'తదుపరి మందు',
+        emptyTitle: 'నమస్కారం, నేను మీకు ఎలా సహాయపడగలను?',
+        emptySubtitle: 'క్రింద ఉన్న పెద్ద బటన్ నొక్కి మాట్లాడండి లేదా ప్రశ్న ఎంచుకోండి.',
+        disclaimer: 'ఈ AI ప్రోటోటైప్ కేవలం ప్రదర్శన కొరకు మాత్రమే. ఇది డాక్టర్ లేదా ఫార్మసిస్ట్ సలహాకు ప్రత్యామ్నాయం కాదు.',
+        alertSpoken: 'మీ మందు తీసుకునే సమయం అయింది.',
+      },
+      hi: {
+        appTitle: 'एल्डरकेयर AI',
+        ready: 'आप बोल सकते हैं',
+        listening: 'सुन रहा हूँ...',
+        thinking: 'सोच रहा हूँ...',
+        speaking: 'बोल रहा हूँ...',
+        startAssistant: 'सहायक शुरू करें',
+        stopSpeaking: 'रोकें',
+        prototypeNote: 'प्रोटोटाइप एक्टिवेशन (पावर डबल-प्रेस)',
+        camera: 'कैमरा',
+        emergency: 'आपातकालीन',
+        nextMedicine: 'अगली दवा',
+        emptyTitle: 'नमस्ते, मैं आपकी क्या सहायता कर सकता हूँ?',
+        emptySubtitle: 'नीचे दिए गए बड़े बटन को दबाएं और अपनी भाषा में बोलें।',
+        disclaimer: 'यह AI सहायक केवल प्रदर्शन और सहायता के लिए है। यह डॉक्टर या फार्मासिस्ट का विकल्प नहीं है।',
+        alertSpoken: 'आपकी दवा लेने का समय हो गया है।',
+      }
+    };
+
+    function updateUI() {
+      const t = DICT[currentLang];
+      document.getElementById('appTitleText').innerText = t.appTitle;
+      document.getElementById('prototypeNote').innerText = t.prototypeNote;
+      document.getElementById('cameraBtnLabel').innerText = t.camera;
+      document.getElementById('emergencyBtnLabel').innerText = t.emergency;
+      document.getElementById('nextMedLabel').innerText = t.nextMedicine;
+      document.getElementById('emptyTitle').innerText = t.emptyTitle;
+      document.getElementById('emptySubtitle').innerText = t.emptySubtitle;
+      document.getElementById('disclaimerText').innerText = t.disclaimer;
+
+      // Update Tab Styles
+      ['en', 'te', 'hi'].forEach(l => {
+        const btn = document.getElementById('langBtn' + l.charAt(0).toUpperCase() + l.slice(1));
+        if (l === currentLang) {
+          btn.className = 'px-2.5 py-1 rounded-full text-xs font-semibold ' + (l === 'te' ? 'bg-pink-600' : l === 'hi' ? 'bg-amber-600' : 'bg-sky-500') + ' text-white shadow-md';
+        } else {
+          btn.className = 'px-2.5 py-1 rounded-full text-xs font-semibold text-slate-300 hover:text-white';
+        }
+      });
+
+      // Update Medicine Card texts based on language
+      if (currentLang === 'te') {
+        document.getElementById('medName').innerText = 'మెట్ఫార్మిన్ 500mg (Metformin)';
+        document.getElementById('medDosage').innerText = '1 tablet (1 మాత్ర) • Daily (ప్రతిరోజూ)';
+        document.getElementById('medInstruction').innerText = 'ఉదయం టిఫిన్ తిన్న తర్వాత మంచినీళ్లతో వేసుకోవాలి. షుగర్ నియంత్రణకు సహాయపడుతుంది.';
+      } else if (currentLang === 'hi') {
+        document.getElementById('medName').innerText = 'मेटफॉर्मिन 500mg (Metformin)';
+        document.getElementById('medDosage').innerText = '1 tablet (1 गोली) • Daily (प्रतिदिन)';
+        document.getElementById('medInstruction').innerText = 'सुबह नाश्ते के बाद पानी के साथ एक गोली लें। शुगर को नियंत्रित रखने में मदद करता है।';
+      } else {
+        document.getElementById('medName').innerText = 'Metformin Hydrochloride 500mg';
+        document.getElementById('medDosage').innerText = '1 tablet • Daily';
+        document.getElementById('medInstruction').innerText = 'Take 1 tablet after breakfast with water to maintain healthy blood sugar.';
+      }
+
+      setOrbState(currentState);
+    }
+
+    function setLang(lang) {
+      stopSpeech();
+      currentLang = lang;
+      updateUI();
+    }
+
+    function setOrbState(state) {
+      currentState = state;
+      const t = DICT[currentLang];
+      const ring = document.getElementById('orbRing');
+      const core = document.getElementById('orbCore');
+      const diffusion = document.getElementById('orbDiffusion');
+      const statusText = document.getElementById('statusText');
+      const statusDot = document.getElementById('statusDot');
+      const actBtnText = document.getElementById('actBtnText');
+      const actBtn = document.getElementById('mainActivationBtn');
+      const waveform = document.getElementById('orbWaveform');
+
+      ring.className = 'relative w-40 h-40 sm:w-44 sm:h-44 rounded-full p-[3px] bg-gradient-to-b from-white/40 via-white/10 to-white/5 backdrop-blur-2xl shadow-liquid-lg transition-all duration-500';
+
+      if (state === 'listening') {
+        ring.classList.add('orb-listening');
+        core.className = 'w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-sky-400 opacity-85 blur-md';
+        diffusion.className = 'absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-sky-400 opacity-40 blur-3xl';
+        statusText.innerText = t.listening;
+        statusDot.className = 'w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse';
+        actBtnText.innerText = t.listening;
+        actBtn.className = 'w-full h-16 sm:h-20 rounded-2xl font-bold text-xl sm:text-2xl tracking-wide flex items-center justify-center gap-3.5 transition-all duration-300 tactile-button border bg-gradient-to-r from-indigo-600 via-purple-600 to-sky-600 text-white shadow-liquid-lg border-indigo-400/50 ring-4 ring-indigo-500/30';
+        waveform.classList.remove('hidden');
+      } else if (state === 'thinking') {
+        ring.classList.add('orb-thinking');
+        core.className = 'w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-pink-500 via-purple-600 to-indigo-400 opacity-85 blur-md';
+        statusText.innerText = t.thinking;
+        statusDot.className = 'w-2.5 h-2.5 rounded-full bg-purple-400 animate-spin';
+        waveform.classList.add('hidden');
+      } else if (state === 'speaking') {
+        ring.classList.add('orb-speaking');
+        core.className = 'w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-emerald-400 via-teal-500 to-sky-400 opacity-85 blur-md';
+        diffusion.className = 'absolute inset-0 rounded-full bg-gradient-to-tr from-emerald-400 via-teal-500 to-sky-400 opacity-45 blur-3xl';
+        statusText.innerText = t.speaking;
+        statusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse';
+        actBtnText.innerText = t.stopSpeaking;
+        actBtn.className = 'w-full h-16 sm:h-20 rounded-2xl font-bold text-xl sm:text-2xl tracking-wide flex items-center justify-center gap-3.5 transition-all duration-300 tactile-button border bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-liquid-lg border-rose-400/30';
+        waveform.classList.remove('hidden');
+      } else if (state === 'urgent') {
+        ring.classList.add('orb-urgent');
+        core.className = 'w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-rose-500 via-amber-500 to-red-600 opacity-85 blur-md';
+        statusText.innerText = 'అత్యవసర హెచ్చరిక (URGENT)';
+        statusDot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping';
+        waveform.classList.add('hidden');
+      } else {
+        // idle
+        ring.classList.add('orb-idle');
+        core.className = 'w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-sky-400 via-cyan-500 to-indigo-500 opacity-85 blur-md';
+        diffusion.className = 'absolute inset-0 rounded-full bg-gradient-to-tr from-sky-400 via-cyan-500 to-indigo-500 opacity-40 blur-3xl';
+        statusText.innerText = t.ready;
+        statusDot.className = 'w-2.5 h-2.5 rounded-full bg-sky-400';
+        actBtnText.innerText = t.startAssistant;
+        actBtn.className = 'w-full h-16 sm:h-20 rounded-2xl font-bold text-xl sm:text-2xl tracking-wide flex items-center justify-center gap-3.5 transition-all duration-300 tactile-button border liquid-glass-elevated text-white hover:bg-white/15 border-white/25 shadow-liquid-lg';
+        waveform.classList.add('hidden');
+      }
+    }
+
+    // Toggle Voice Assistant
+    function toggleActivation() {
+      if (currentState === 'speaking') {
+        stopSpeech();
+        setOrbState('idle');
+        return;
+      }
+      if (currentState === 'listening') {
+        if (recognition) { try { recognition.stop(); } catch(e){} }
+        setOrbState('idle');
+        return;
+      }
+
+      startListening();
+    }
+
+    function startListening() {
+      stopSpeech();
+      const SpeechConstructor = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechConstructor) {
+        alert('Microphone speech recognition is not supported in this browser. Please type your query in the text box below.');
+        return;
+      }
+
+      try {
+        recognition = new SpeechConstructor();
+        recognition.continuous = false;
+        recognition.interimResults = true;
+        recognition.lang = currentLang === 'te' ? 'te-IN' : currentLang === 'hi' ? 'hi-IN' : 'en-IN';
+
+        setOrbState('listening');
+        const box = document.getElementById('speechTranscriptBox');
+        const textElem = document.getElementById('speechTranscriptText');
+        box.classList.remove('hidden');
+        textElem.innerText = 'Listening...';
+
+        recognition.onresult = function(event) {
+          let str = '';
+          for (let i = 0; i < event.results.length; i++) {
+            str += event.results[i][0].transcript;
+          }
+          textElem.innerText = '“' + str + '”';
+          if (event.results[0].isFinal) {
+            recognition.stop();
+            processQuery(str);
+          }
+        };
+
+        recognition.onerror = function() {
+          setOrbState('idle');
+          box.classList.add('hidden');
+        };
+
+        recognition.onend = function() {
+          if (currentState === 'listening') {
+            setOrbState('idle');
+          }
+        };
+
+        recognition.start();
+      } catch(e) {
+        setOrbState('idle');
+      }
+    }
+
+    // Text to Speech
+    function speakText(text, onComplete) {
+      stopSpeech();
+      if (!window.speechSynthesis) return;
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = voiceRate;
+      utterance.lang = currentLang === 'te' ? 'te-IN' : currentLang === 'hi' ? 'hi-IN' : 'en-US';
+
+      // Find appropriate voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const targetPrefix = currentLang === 'te' ? 'te' : currentLang === 'hi' ? 'hi' : 'en';
+      const match = voices.find(v => v.lang.toLowerCase().startsWith(targetPrefix));
+      if (match) utterance.voice = match;
+
+      utterance.onstart = function() {
+        setOrbState('speaking');
+      };
+      utterance.onend = function() {
+        setOrbState('idle');
+        if (onComplete) onComplete();
+      };
+      utterance.onerror = function() {
+        setOrbState('idle');
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function stopSpeech() {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    // Query Processing
+    function processQuery(query) {
+      document.getElementById('speechTranscriptBox').classList.add('hidden');
+      document.getElementById('emptyStateCard')?.classList.add('hidden');
+      addChatMessage('user', query);
+      setOrbState('thinking');
+
+      setTimeout(function() {
+        const response = generateLocalIntelligence(query, currentLang);
+        addChatMessage('assistant', response.answer, response.warning, response.warningLevel, response.nextAction);
+        speakText(response.speechText);
+      }, 700);
+    }
+
+    function generateLocalIntelligence(q, lang) {
+      const query = (q || '').toLowerCase();
+
+      // Urgent
+      if (query.includes('chest') || query.includes('heart') || query.includes('pain') || query.includes('గుండె') || query.includes('నొప్పి') || query.includes('శ్వాస') || query.includes('सीना') || query.includes('दर्द')) {
+        if (lang === 'te') {
+          return {
+            answer: 'మీకు గుండె నొప్పి లేదా తీవ్రమైన ఇబ్బంది ఉంటే వెంటనే సహాయం పొందండి. ఆలస్యం చేయవద్దు.',
+            warning: 'ఇది అత్యవసర పరిస్థితి కావచ్చు. వెంటనే కుటుంబ సభ్యులకు లేదా 108 అంబులెన్స్‌కు కాల్ చేయండి.',
+            warningLevel: 'urgent',
+            nextAction: 'ఎరుపు రంగు అత్యవసర బటన్ నొక్కి 108 కు కాల్ చేయండి.',
+            speechText: 'దయచేసి విశ్రాంతిగా కూర్చోండి. వెంటనే అత్యవసర బటన్ నొక్కి 108 కి కాల్ చేయండి.'
+          };
+        } else if (lang === 'hi') {
+          return {
+            answer: 'सीने में दर्द या सांस लेने में परेशानी होने पर तुरंत चिकित्सा सहायता लें।',
+            warning: 'यह गंभीर हो सकता है। तुरंत 108 पर संपर्क करें।',
+            warningLevel: 'urgent',
+            nextAction: 'लाल आपातकालीन बटन दबाएं।',
+            speechText: 'आराम से बैठें और तुरंत 108 आपातकालीन सहायता पर कॉल करें।'
+          };
+        } else {
+          return {
+            answer: 'Chest discomfort or severe breathing trouble requires immediate medical attention.',
+            warning: 'This could be a medical emergency. Please seek professional help right away.',
+            warningLevel: 'urgent',
+            nextAction: 'Tap the red Emergency button or dial 108 / 112 immediately.',
+            speechText: 'Please sit comfortably and contact emergency services immediately.'
+          };
+        }
+      }
+
+      // Remind
+      if (query.includes('remind') || query.includes('గుర్తు') || query.includes('అలారం') || query.includes('याद')) {
+        if (lang === 'te') {
+          return {
+            answer: 'ప్రతిరోజూ ఉదయం 8:00 గంటలకు మీ మెట్ఫార్మిన్ మందు కోసం రిమైండర్ నమోదయింది.',
+            warningLevel: 'none',
+            nextAction: 'ఉదయం 8:00 కు మీ ఫోన్ అలారం మోగుతుంది.',
+            speechText: 'ప్రతిరోజూ ఉదయం ఎనిమిది గంటలకు రిమైండర్ ఏర్పాటు చేశాను.'
+          };
+        } else if (lang === 'hi') {
+          return {
+            answer: 'प्रतिदिन सुबह 8:00 बजे आपकी मेटफॉर्मिन दवा के लिए रिमाइंडर सेट कर दिया गया है।',
+            warningLevel: 'none',
+            nextAction: 'सुबह 8 बजे आपको सूचना मिलेगी।',
+            speechText: 'रोजाना सुबह 8 बजे का रिमाइंडर तैयार है।'
+          };
+        } else {
+          return {
+            answer: 'Daily reminder set for your Metformin 500mg at 8:00 AM after breakfast.',
+            warningLevel: 'none',
+            nextAction: 'You will receive an alert at 8:00 AM.',
+            speechText: 'Daily 8:00 AM reminder is set.'
+          };
+        }
+      }
+
+      // Default: When to take medicine
+      if (lang === 'te') {
+        return {
+          answer: 'మీ తదుపరి మందు మెట్ఫార్మిన్ 500mg. దీనిని ఉదయం 8:00 గంటలకు టిఫిన్ తిన్న తర్వాత మంచినీళ్లతో ఒక మాత్ర వేసుకోవాలి.',
+          warning: 'ప్రిస్క్రిప్షన్ వివరాలు లేదా సమయం మారితే మీ డాక్టర్‌ని సంప్రదించండి.',
+          warningLevel: 'none',
+          nextAction: 'టిఫిన్ తర్వాత ఒక మాత్ర వేసుకోండి.',
+          speechText: 'మీరు ఉదయం 8 గంటలకు టిఫిన్ తిన్న తర్వాత మెట్ఫార్మిన్ ఒక మాత్ర వేసుకోవాలి.'
+        };
+      } else if (lang === 'hi') {
+        return {
+          answer: 'आपकी अगली दवा मेटफॉर्मिन 500mg है। इसे सुबह 8:00 बजे नाश्ता करने के बाद पानी के साथ एक गोली लेना है।',
+          warning: 'दवा का समय डॉक्टर के पर्चे के अनुसार ही रखें।',
+          warningLevel: 'none',
+          nextAction: 'नाश्ते के बाद एक गोली लें।',
+          speechText: 'सुबह 8 बजे नाश्ते के बाद मेटफॉर्मिन की एक गोली लें।'
+        };
+      } else {
+        return {
+          answer: 'Your next medicine is Metformin 500mg. Take 1 tablet at 8:00 AM after breakfast with a glass of water.',
+          warning: 'Always follow the specific instructions on your prescription.',
+          warningLevel: 'none',
+          nextAction: 'Take 1 tablet after breakfast.',
+          speechText: 'You should take your Metformin 500mg tablet at 8:00 AM after breakfast.'
+        };
+      }
+    }
+
+    function addChatMessage(role, text, warning, warningLevel, nextAction) {
+      const feed = document.getElementById('chatFeed');
+      const div = document.createElement('div');
+      const time = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+      if (role === 'user') {
+        div.className = 'flex flex-col items-end';
+        div.innerHTML = `
+          <div class="max-w-[85%] rounded-2xl rounded-tr-sm bg-gradient-to-r from-sky-600 to-indigo-600 px-4 py-2.5 text-white font-semibold text-base sm:text-lg shadow-md border border-sky-400/30">
+            <p class="leading-snug">${escapeHtml(text)}</p>
+          </div>
+        `;
+      } else {
+        div.className = 'flex flex-col items-start w-full';
+        let warningHtml = '';
+        if (warning) {
+          const isUrgent = warningLevel === 'urgent';
+          warningHtml = `
+            <div class="mt-3 p-3 rounded-xl border flex items-start gap-2.5 ${isUrgent ? 'bg-rose-950/50 border-rose-500/50 text-rose-200' : 'bg-amber-950/40 border-amber-500/40 text-amber-200'}">
+              <span class="text-lg">${isUrgent ? '🚨' : '⚠️'}</span>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider block mb-0.5">${isUrgent ? 'URGENT NOTICE' : 'CAUTION'}</span>
+                <p class="text-sm font-medium leading-snug">${escapeHtml(warning)}</p>
+              </div>
+            </div>
+          `;
+        }
+
+        let nextActionHtml = nextAction ? `
+          <div class="mt-3 p-2.5 rounded-xl bg-sky-500/10 border border-sky-400/25 flex items-center gap-2">
+            <span class="text-sky-400 text-sm">➔</span>
+            <span class="text-sm font-semibold text-sky-200">${escapeHtml(nextAction)}</span>
+          </div>
+        ` : '';
+
+        div.innerHTML = `
+          <div class="w-full rounded-2xl liquid-glass-card p-4 border border-white/20 shadow-liquid relative overflow-hidden">
+            <p class="text-base sm:text-lg font-medium text-slate-100 leading-relaxed">${escapeHtml(text)}</p>
+            ${warningHtml}
+            ${nextActionHtml}
+            <div class="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between">
+              <button onclick="speakText('${escapeHtml(text)}')" class="px-3 py-1.5 rounded-lg liquid-glass border border-white/20 text-slate-200 hover:text-white font-bold text-xs flex items-center gap-1.5 tactile-button">
+                <span>🔊 Replay (మళ్లీ వినండి)</span>
+              </button>
+              <span class="text-[11px] font-mono text-slate-400">${time}</span>
+            </div>
+          </div>
+        `;
+      }
+      feed.appendChild(div);
+      feed.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+
+    function sendTypedMsg() {
+      const input = document.getElementById('typeInput');
+      const val = input.value.trim();
+      if (!val) return;
+      input.value = '';
+      processQuery(val);
+    }
+
+    function askPreset(q) {
+      processQuery(q);
+    }
+
+    function escapeHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    function markMedTaken(btn) {
+      confetti({ particleCount: 40, spread: 60 });
+      btn.outerHTML = `<div class="w-full py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-semibold text-sm flex items-center justify-center gap-2">✓ Taken for today (ఈరోజు తీసుకున్నారు)</div>`;
+    }
+
+    // Camera & Image handling
+    function openCamera() {
+      document.getElementById('cameraModal').classList.remove('hidden');
+      const video = document.getElementById('cameraVideo');
+      const preview = document.getElementById('cameraPreviewImg');
+      preview.classList.add('hidden');
+      video.classList.remove('hidden');
+
+      if (navigator.mediaDevices?.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+          .then(stream => {
+            cameraStream = stream;
+            video.srcObject = stream;
+          })
+          .catch(err => {
+            console.warn(err);
+          });
+      }
+    }
+
+    function closeCamera() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(t => t.stop());
+        cameraStream = null;
+      }
+      document.getElementById('cameraModal').classList.add('hidden');
+    }
+
+    function captureCameraPhoto() {
+      const video = document.getElementById('cameraVideo');
+      const canvas = document.getElementById('cameraCanvas');
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const url = canvas.toDataURL('image/jpeg', 0.85);
+      analyzeMedicineImage(url);
+      closeCamera();
+    }
+
+    function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function() {
+        analyzeMedicineImage(reader.result);
+        closeCamera();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function useSampleMetforminBox() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 400;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 600, 400);
+
+      ctx.fillStyle = '#0284c7';
+      ctx.fillRect(0, 0, 600, 60);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 24px sans-serif';
+      ctx.fillText('Rx Prescription Medicine', 30, 40);
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 36px sans-serif';
+      ctx.fillText('METFORMIN HYDROCHLORIDE', 30, 130);
+
+      ctx.fillStyle = '#0284c7';
+      ctx.font = 'bold 32px sans-serif';
+      ctx.fillText('TABLETS IP 500 mg', 30, 180);
+
+      ctx.fillStyle = '#475569';
+      ctx.font = '18px sans-serif';
+      ctx.fillText('Dosage: 1 Tablet Daily After Meals', 30, 240);
+      ctx.fillText('Store below 25°C. Keep away from children.', 30, 280);
+
+      ctx.fillStyle = '#000000';
+      for (let i = 0; i < 40; i++) {
+        ctx.fillRect(30 + i * 6, 330, (i%3===0?3:1), 40);
+      }
+
+      const sampleUrl = canvas.toDataURL('image/jpeg', 0.9);
+      analyzeMedicineImage(sampleUrl);
+      closeCamera();
+    }
+
+    function analyzeMedicineImage(imgUrl) {
+      document.getElementById('emptyStateCard')?.classList.add('hidden');
+      const feed = document.getElementById('chatFeed');
+      const div = document.createElement('div');
+      div.className = 'flex flex-col items-end';
+      div.innerHTML = `
+        <div class="max-w-[85%] rounded-2xl bg-gradient-to-r from-sky-600 to-indigo-600 p-2.5 text-white shadow-md">
+          <img src="${imgUrl}" class="w-full max-h-40 object-cover rounded-xl mb-1.5 border border-white/20" alt="Uploaded Medicine">
+          <p class="text-sm font-semibold">Please identify this medicine packaging</p>
+        </div>
+      `;
+      feed.appendChild(div);
+      setOrbState('thinking');
+
+      setTimeout(function() {
+        let text = currentLang === 'te' 
+          ? 'ఫోటోలో మెట్ఫార్మిన్ 500mg ప్యాకెట్ కనిపిస్తోంది. ఇది మీ షుగర్ నియంత్రణకు సూచించిన మందు.' 
+          : currentLang === 'hi' 
+          ? 'फोटो में मेटफॉर्मिन 500mg की दवा दिख रही है। इसे नाश्ते के बाद लिया जाता है।' 
+          : 'The image shows Metformin Hydrochloride 500mg, prescribed for blood sugar management.';
+        
+        let warning = currentLang === 'te'
+          ? 'ఫోటోను మాత్రమే చూసి మాత్రను నిర్ధారించలేము. ప్యాకెట్ పై ఉన్న ప్రిస్క్రిప్షన్ లేబుల్ సరిచూసుకోండి.'
+          : currentLang === 'hi'
+          ? 'केवल फोटो देखकर दवा की पहचान न करें। पैकेट पर डॉक्टर का पर्चा अवश्य जांचें।'
+          : 'I can read visible package labels, but cannot verify unlabelled pills by sight alone. Verify with doctor.';
+
+        addChatMessage('assistant', text, warning, 'caution', 'Take 1 tablet after breakfast as prescribed.');
+        speakText(text);
+      }, 1000);
+    }
+
+    // Emergency Modal
+    function openEmergency() { document.getElementById('emergencyModal').classList.remove('hidden'); }
+    function closeEmergency() { document.getElementById('emergencyModal').classList.add('hidden'); }
+
+    // Pharmacy Bot Modal
+    let pharmacyInterval = null;
+    function openPharmacy() {
+      document.getElementById('pharmacyModal').classList.remove('hidden');
+      startPharmacyDemoCall();
+    }
+    function closePharmacy() {
+      document.getElementById('pharmacyModal').classList.add('hidden');
+      if (pharmacyInterval) clearInterval(pharmacyInterval);
+    }
+    function startPharmacyDemoCall() {
+      const feed = document.getElementById('pharmacyTranscriptFeed');
+      const title = document.getElementById('pharmacyStatusTitle');
+      const badge = document.getElementById('pharmacyStockBadge');
+      const ping = document.getElementById('pharmacyPing');
+      feed.innerHTML = '';
+      badge.classList.add('hidden');
+      ping.className = 'w-3.5 h-3.5 rounded-full bg-emerald-400 animate-ping';
+      title.innerText = 'Dialing Apollo Pharmacy (Demo)...';
+
+      const script = [
+        { speaker: 'system', text: 'Connecting to Apollo Pharmacy (Main Road)... Voice bridge active.', time: '00:01' },
+        { speaker: 'bot', text: 'Hello, this is ElderCare AI calling on behalf of Demo Patient. Could you verify if Metformin 500mg is in stock?', time: '00:04' },
+        { speaker: 'pharmacist', text: 'Good morning! Checking our inventory... Yes, Metformin 500mg is in stock (Strip of 10 tablets, ₹38.50).', time: '00:09' },
+        { speaker: 'bot', text: 'Thank you! Please hold 1 strip for pickup today under Demo Patient ID.', time: '00:13' },
+        { speaker: 'pharmacist', text: 'Reserved! We are open until 10:30 PM.', time: '00:17' },
+        { speaker: 'system', text: 'Availability confirmed & reserved. (SIMULATED DEMO)', time: '00:20' }
+      ];
+
+      let idx = 0;
+      if (pharmacyInterval) clearInterval(pharmacyInterval);
+      pharmacyInterval = setInterval(function() {
+        if (idx >= script.length) {
+          clearInterval(pharmacyInterval);
+          title.innerText = 'Call Completed • Stock Confirmed';
+          badge.classList.remove('hidden');
+          ping.className = 'w-3.5 h-3.5 rounded-full bg-emerald-500';
+          return;
+        }
+        const item = script[idx];
+        if (item.speaker === 'bot') title.innerText = 'AI Assistant Speaking...';
+        else if (item.speaker === 'pharmacist') title.innerText = 'Pharmacist Responding...';
+
+        const bubble = document.createElement('div');
+        bubble.className = `p-3 rounded-2xl text-sm leading-relaxed border ${item.speaker === 'bot' ? 'bg-sky-500/15 border-sky-400/30 text-sky-100 ml-4' : item.speaker === 'pharmacist' ? 'bg-emerald-500/15 border-emerald-400/30 text-emerald-100 mr-4' : 'bg-white/5 border-white/10 text-slate-300 text-center text-xs'}`;
+        bubble.innerHTML = `
+          <div class="flex items-center justify-between text-[11px] font-bold mb-1 opacity-75">
+            <span>${item.speaker === 'bot' ? 'AI Assistant' : item.speaker === 'pharmacist' ? 'Apollo Pharmacist' : 'System Event'}</span>
+            <span>${item.time}</span>
+          </div>
+          <p class="text-sm font-medium">${item.text}</p>
+        `;
+        feed.appendChild(bubble);
+        feed.scrollTop = feed.scrollHeight;
+        idx++;
+      }, 1600);
+    }
+
+    // Settings
+    function openSettings() { document.getElementById('settingsDrawer').classList.remove('hidden'); }
+    function closeSettings() { document.getElementById('settingsDrawer').classList.add('hidden'); }
+    function setVoiceRate(rate) { voiceRate = rate; }
+    function setTextScale(scale) {
+      document.body.className = document.body.className.replace(/text-scale-\w+/g, '');
+      if (scale !== 'normal') document.body.classList.add('text-scale-' + scale);
+    }
+    function toggleHighContrast(enabled) {
+      if (enabled) document.body.classList.add('high-contrast');
+      else document.body.classList.remove('high-contrast');
+    }
+    function saveGeminiKey(val) { localStorage.setItem('gemini_api_key_user', val); }
+    function resetAllDemoData() {
+      localStorage.clear();
+      location.reload();
+    }
+
+    // Demo Toolbar
+    let demoExpanded = true;
+    function toggleDemoDock() {
+      demoExpanded = !demoExpanded;
+      document.getElementById('demoDock').classList.toggle('hidden', !demoExpanded);
+    }
+    function triggerDemoReminder() {
+      const banner = document.getElementById('reminderAlertBanner');
+      banner.classList.remove('hidden');
+      const t = DICT[currentLang];
+      document.getElementById('alertTitle').innerText = t.alertSpoken;
+      speakText(t.alertSpoken);
+    }
+    function dismissAlert() { document.getElementById('reminderAlertBanner').classList.add('hidden'); }
+    function markAlertTaken() {
+      confetti({ particleCount: 40, spread: 60 });
+      dismissAlert();
+    }
+    function triggerDemoUrgent() {
+      setOrbState('urgent');
+      processQuery('నాకు గుండె వద్ద విపరీతమైన నొప్పి వస్తోంది');
+    }
+
+    // Initialize
+    updateUI();
+  </script>
 </body>
 </html>
