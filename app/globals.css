@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: #090d16;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --glass-bg: rgba(255, 255, 255, 0.07);
+    --glass-border: rgba(255, 255, 255, 0.16);
+    --glass-shine: rgba(255, 255, 255, 0.28);
+    --accent-blue: #38bdf8;
+    --accent-indigo: #6366f1;
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+  }
+
+  html {
+    font-size: 18px; /* High legibility baseline for older adults */
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* Apple Liquid Glass Surface */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.42),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.liquid-glass-elevated {
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.6),
+              inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.35);
+}
+
+.liquid-glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Claymorphic & Tactile Buttons */
+.tactile-button {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35),
+              inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+.tactile-button:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4),
+              inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* High Contrast Mode for Low Vision */
+.high-contrast {
+  --bg-main: #000000 !important;
+  --text-primary: #ffffff !important;
+  --text-secondary: #e2e8f0 !important;
+  --glass-bg: #111111 !important;
+  --glass-border: #ffffff !important;
+}
+
+.high-contrast .liquid-glass,
+.high-contrast .liquid-glass-card,
+.high-contrast .liquid-glass-elevated {
+  background: #000000 !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: none !important;
+}
+
+/* Accessibility: Large Text Scale */
+.text-scale-large {
+  font-size: 21px !important;
+}
+
+.text-scale-extra-large {
+  font-size: 24px !important;
+}
+
+/* Fluid Keyframe Animations */
+@keyframes fluid-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.35));
+  }
+  50% {
+    transform: scale(1.06);
+    filter: drop-shadow(0 0 55px rgba(99, 102, 241, 0.55));
+  }
+}
+
+@keyframes fluid-listening {
+  0%, 100% {
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 50px rgba(99, 102, 241, 0.65));
+  }
+  50% {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 75px rgba(168, 85, 247, 0.75));
+  }
+}
+
+@keyframes fluid-thinking {
+  0% {
+    transform: rotate(0deg) scale(1.03);
+    filter: drop-shadow(0 0 50px rgba(236, 72, 153, 0.6));
+  }
+  50% {
+    transform: rotate(180deg) scale(1.08);
+    filter: drop-shadow(0 0 65px rgba(139, 92, 246, 0.7));
+  }
+  100% {
+    transform: rotate(360deg) scale(1.03);
+    filter: drop-shadow(0 0 50px rgba(236, 72, 153, 0.6));
+  }
+}
+
+@keyframes fluid-speaking {
+  0%, 100% {
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 50px rgba(16, 185, 129, 0.6));
+  }
+  50% {
+    transform: scale(1.14);
+    filter: drop-shadow(0 0 80px rgba(52, 211, 153, 0.75));
+  }
+}
+
+@keyframes fluid-urgent {
+  0%, 100% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 60px rgba(239, 68, 68, 0.75));
+  }
+  50% {
+    transform: scale(1.16);
+    filter: drop-shadow(0 0 95px rgba(248, 113, 113, 0.9));
+  }
+}
+
+.orb-idle-anim {
+  animation: fluid-pulse 4s ease-in-out infinite;
+}
+
+.orb-listening-anim {
+  animation: fluid-listening 1.8s ease-in-out infinite;
+}
+
+.orb-thinking-anim {
+  animation: fluid-thinking 6s linear infinite;
+}
+
+.orb-speaking-anim {
+  animation: fluid-speaking 1.4s ease-in-out infinite;
+}
+
+.orb-urgent-anim {
+  animation: fluid-urgent 1.2s ease-in-out infinite;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .orb-idle-anim,
+  .orb-listening-anim,
+  .orb-thinking-anim,
+  .orb-speaking-anim,
+  .orb-urgent-anim {
+    animation: none !important;
+  }
+}
